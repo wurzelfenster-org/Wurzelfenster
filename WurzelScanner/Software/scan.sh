@@ -82,19 +82,20 @@ start=`date +%s`
 date=$(date -d "today" +"%Y-%m-%d-%H-%M")
 
 # get the scan number
-if [[ -f ${scan_dir}${counter_file} ]]
+if ! [[ -f ${scan_dir}${counter_file} ]]
 then
-	count=`cat ${scan_dir}${counter_file}`
+    mkdir -p ${scan_dir}
+    echo 1 > ${scan_dir}${counter_file}
+else
+    count=`cat ${scan_dir}${counter_file}`
     filename=${prefix}-${dpi}-$(printf %04d ${count})
     ((count++))
     echo $count > ${scan_dir}${counter_file}
-else
-    echo ERROR: the file ${scan_dir}${counter_file} does not exist.
 fi
 
 # scan
 startScan=`date +%s`
-scanimage --mode=color --resolution=$dpi --format=$format -l0 -t0 -x215 -y297 > ${scan_dir}${filename}.${format}
+scanimage --warmup-time=5 --mode=Gray --resolution=$dpi --format=$format -l0 -t0 -x210 -y297 --depth=8 -v > ${scan_dir}${filename}.${format}
 endScan=`date +%s`
 runtimeScan=$((endScan-startScan))
 echo "scan done. $runtimeScan sec"
@@ -105,7 +106,7 @@ convert ${scan_dir}${filename}.${format} ${scan_dir}${filename}.png
 endConversion=`date +%s`
 runtimeConversion=$((endConversion-startConversion))
 echo "conversion done. $runtimeConversion sec"
-rm $filename.tiff
+rm ${scan_dir}${filename}.${format}
 echo "cleanup done"
 
 end=`date +%s`
