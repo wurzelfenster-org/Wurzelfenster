@@ -95,7 +95,7 @@ fi
 
 # scan
 startScan=`date +%s`
-scanimage --warmup-time=5 --mode=Gray --resolution=$dpi --format=$format -l0 -t0 -x210 -y297 --depth=8 -v > ${scan_dir}${filename}.${format}
+scanimage --warmup-time=30 --resolution=$dpi --format=$format -l0 -t0 -x210 -y297 --depth=8 -v > ${scan_dir}${filename}.${format}
 endScan=`date +%s`
 runtimeScan=$((endScan-startScan))
 echo "scan done. $runtimeScan sec"
