@@ -14,12 +14,12 @@ def timed(f):
     start = time()
     result = f(*args, **kwds)
     elapsed = time() - start
-    print("%s took %d time to finish" % (f.__name__, elapsed))
+    print("%s took %d seconds to finish" % (f.__name__, elapsed))
     return result
   return wrapper
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--resolution',type=int, help = 'scan resolution in dpi, dependend on scanner hardware')
+parser.add_argument('--resolution',default = 300,type=int, help = 'scan resolution in dpi, dependend on scanner hardware')
 
 args = parser.parse_args()
 
@@ -60,19 +60,19 @@ except:
     print('Could not read counter')
 
 
-print(f'Scanning image number:{scanCount}')
+
 
 #
 # Initialize sane
 #
 ver = sane.init()
-print('SANE version:', ver)
+#print('SANE version:', ver)
 
 #
 # Get devices
 #
 devices = sane.get_devices(localOnly=True)
-print('Available devices:', devices)
+#print('Available devices:', devices)
 
 #
 # Open first device
@@ -105,12 +105,12 @@ except:
 #    print('Cannot set scan area, using default')
 
 params = dev.get_parameters()
-print('Device parameters:', params)
+#print('Device parameters:', params)
 
-#
+print(f'Found {devices}')
+print(f'Start scan:{scanCount} with {args.resolution} dpi')
+
 # Start a scan and get and PIL.Image object
-#
-
 @timed
 def scan_image():
     dev.start()
@@ -120,8 +120,9 @@ def scan_image():
 @timed
 def save_image(image):
     # save image in original resolution
-    image.save(f'{cwd}scan_{scanCount}.png')
+    #image.save(f'{cwd}scan_{scanCount}.png')
     #image.save(f'{cwd}scan_{scanCount}.webp',"WEBP")
+    image.save(f'{cwd}scan_{scanCount}.jpg',"JPEG")
 
 image = scan_image()
 save_image(image)
