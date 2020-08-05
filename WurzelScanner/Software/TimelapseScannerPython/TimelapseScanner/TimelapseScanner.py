@@ -4,6 +4,19 @@ import sane
 from PIL import Image
 import argparse
 import os
+import datetime
+from functools import wraps
+from time import time
+
+def timed(f):
+  @wraps(f)
+  def wrapper(*args, **kwds):
+    start = time()
+    result = f(*args, **kwds)
+    elapsed = time() - start
+    print("%s took %d time to finish" % (f.__name__, elapsed))
+    return result
+  return wrapper
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--resolution',type=int, help = 'scan resolution in dpi, dependend on scanner hardware')
@@ -66,8 +79,6 @@ print('Available devices:', devices)
 #
 dev = sane.open(devices[0][0])
 
-
-
 #
 # Set some options
 #
@@ -100,8 +111,15 @@ print('Device parameters:', params)
 # Start a scan and get and PIL.Image object
 #
 dev.start()
+@timed
 im = dev.snap()
-im.save(f'{cwd}scan_{scanCount}.png')
+
+# save image in original resolution
+#im.save(f'{cwd}scan_{scanCount}.png')
+
+# save image
+@timed
+im.save(f'{cwd}scan_{scanCount}.webp',"WEBP")
 
 
 # update counter
