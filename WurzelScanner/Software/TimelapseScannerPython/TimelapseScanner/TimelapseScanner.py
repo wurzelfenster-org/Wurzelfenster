@@ -110,17 +110,18 @@ print('Device parameters:', params)
 #
 # Start a scan and get and PIL.Image object
 #
-dev.start()
-@timed
-im = dev.snap()
 
-# save image in original resolution
-#im.save(f'{cwd}scan_{scanCount}.png')
+@timed
+def scan_image():
+    dev.start()
+    im = dev.snap()
 
 # save image
 @timed
-im.save(f'{cwd}scan_{scanCount}.webp',"WEBP")
-
+def save_image():
+    # save image in original resolution
+    #im.save(f'{cwd}scan_{scanCount}.png')
+    im.save(f'{cwd}scan_{scanCount}.webp',"WEBP")
 
 # update counter
 try: 
