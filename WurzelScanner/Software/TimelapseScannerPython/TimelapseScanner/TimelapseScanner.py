@@ -123,6 +123,9 @@ def save_image():
     #im.save(f'{cwd}scan_{scanCount}.png')
     im.save(f'{cwd}scan_{scanCount}.webp',"WEBP")
 
+scan_image()
+save_image()
+
 # update counter
 try: 
     f = open(scanCountFile, "w")
