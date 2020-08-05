@@ -114,17 +114,17 @@ print('Device parameters:', params)
 @timed
 def scan_image():
     dev.start()
-    im = dev.snap()
+    return dev.snap()
 
 # save image
 @timed
-def save_image():
+def save_image(image):
     # save image in original resolution
-    #im.save(f'{cwd}scan_{scanCount}.png')
-    im.save(f'{cwd}scan_{scanCount}.webp',"WEBP")
+    image.save(f'{cwd}scan_{scanCount}.png')
+    #image.save(f'{cwd}scan_{scanCount}.webp',"WEBP")
 
-scan_image()
-save_image()
+image = scan_image()
+save_image(image)
 
 # update counter
 try: 
